@@ -1,0 +1,5 @@
+#event_simpleName=ProcessRollup2
+| FileName=/^(mshta|rundll32|regsvr32)\.exe$/i
+| (CommandLine=/http/i OR CommandLine=/javascript/i OR CommandLine=/vbscript/i)
+| CommandLine!=/.*(Admin By Request|AppXDeployment).*/i
+| select([@timestamp, ComputerName, UserName, FileName, CommandLine])
