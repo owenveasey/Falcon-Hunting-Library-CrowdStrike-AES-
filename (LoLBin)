@@ -1,0 +1,22 @@
+// Targets: Defense Evasion via Signed Binary Proxy Execution (T1218)
+// Description: Detects mshta.exe or rundll32.exe executing scripts or reaching out to the web.
+#event_simpleName=ProcessRollup2
+| FileName=/^(mshta|rundll32|regsvr32)\.exe$/i
+
+// Filter for high-risk behavioral hooks (Network egress or script execution)
+| (CommandLine=/http/i 
+   OR CommandLine=/javascript/i 
+   OR CommandLine=/vbscript/i 
+   OR CommandLine=/shell/i
+   OR CommandLine=/AppData/i)
+
+// --- ENTERPRISE TUNING (Subtract the Normal) ---
+// Filter out Admin By Request (PAM tool)
+| CommandLine!=/.*Admin By Request\\ShellHelper.*/i
+// Filter out legitimate Windows App Store refresh activity
+| CommandLine!=/.*AppXDeploymentExtensions.*ShellRefresh.*/i
+// Filter out standard Teams/Office background tasks
+| CommandLine!=/.*(com.microsoft.teams|windows.system.launcher).*/i
+
+| select([@timestamp, ComputerName, UserName, FileName, CommandLine, ParentBaseFileName])
+| sort(@timestamp, order=desc)
