@@ -1,0 +1,3 @@
+#event_simpleName=ProcessRollup2
+| CommandLine=/.*net\s+group\s+"domain\s+admins"\s+\/domain.*/i
+| select([@timestamp, ComputerName, UserName, CommandLine])
