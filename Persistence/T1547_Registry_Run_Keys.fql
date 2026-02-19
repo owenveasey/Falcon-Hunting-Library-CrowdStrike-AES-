@@ -1,0 +1,6 @@
+#event_simpleName=RegPropertyValueSet
+| TargetProcessId_decimal=/.*/
+| RegistryPath=/.*\\Microsoft\\Windows\\CurrentVersion\\(Run|RunOnce).*/i
+| !(RegistryValueName=/.*(Teams|OneDrive|Edge).*/i)
+| select([@timestamp, ComputerName, UserName, RegistryPath, RegistryValueName, RegistryValueData])
+| sort(@timestamp, order=desc)
