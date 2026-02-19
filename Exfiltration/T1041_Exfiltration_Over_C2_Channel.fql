@@ -1,0 +1,6 @@
+#event_simpleName=NetworkConnectIP4
+| RemotePort=/(80|443|8080)/
+| (LocalAddressIP4=/^10\./ OR LocalAddressIP4=/^192\.168\./ OR LocalAddressIP4=/^172\.(1[6-9]|2[0-9]|3[0-1])\./)
+| select([@timestamp, ComputerName, RemoteIP4, RemotePort, ContextProcessId_decimal])
+| groupBy([RemoteIP4], function=([count(aid, as=ConnectionCount), collect([ComputerName])]))
+| test(ConnectionCount > 500)
