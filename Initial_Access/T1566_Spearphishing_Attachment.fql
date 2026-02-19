@@ -1,0 +1,5 @@
+#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(winword|excel|powerpnt|outlook)\.exe$/i
+| FileName=/^(powershell|cmd|wscript|cscript|mshta)\.exe$/i
+| select([@timestamp, ComputerName, UserName, ParentBaseFileName, FileName, CommandLine])
+| sort(@timestamp, order=desc)
