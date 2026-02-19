@@ -1,0 +1,6 @@
+#event_simpleName=ProcessRollup2
+| FileName=/powershell\.exe/i
+| CommandLine=/.*(Invoke-WebRequest|UploadFile|WebClient|PutFile|Post).*/i
+| CommandLine!=/.*(windowsupdate|microsoft\.com|slackb\.com|check-license).*/i
+| select([@timestamp, ComputerName, UserName, CommandLine])
+| sort(@timestamp, order=desc)
